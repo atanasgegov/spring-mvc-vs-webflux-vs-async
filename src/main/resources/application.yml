@@ -1,0 +1,17 @@
+server:
+  port : 8090
+
+# the logging configuration is here
+logging:
+  level:
+    root: INFO
+    com.akg: DEBUG
+
+common:
+  type: async # async, mvc, webFlux
+  number-of-executions: 1000
+  fake-http-server-url: http://localhost:9090/imitateWork?timeInMs=%s
+  time-in-ms: 200
+  thread-queue-capacity: 1000
+  thread-max-pool-size: 1000
+  thread-core-pool-size: 500
