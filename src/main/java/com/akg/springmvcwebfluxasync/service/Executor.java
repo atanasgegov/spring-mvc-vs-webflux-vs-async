@@ -28,12 +28,7 @@ public class Executor {
 	private Config config;
 	
 	@Autowired
-	private ApplicationContext context;
-
-	@Autowired
 	private AsyncService asyncService;
-	
-	private ScheduledExecutorService shutdowner = Executors.newScheduledThreadPool(1);
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void exec() {
@@ -57,20 +52,7 @@ public class Executor {
 		stopWatch.stop();
 		log.info("{}, time execution: {} ms.", config.getType(), stopWatch.getTotalTimeMillis());
 		log.info("Done.");
-
-		int shutdownAfter = 1;
-		log.info("The application will shutdown in {} seconds.", shutdownAfter);
-		this.shutdown(shutdownAfter);
 	}
-
-	private void shutdown(int seconds) {
-		Runnable shutdownerTask = () -> { 
-			((ConfigurableApplicationContext) context).close();
-			System.exit(0);
-		};
-		shutdowner.schedule(shutdownerTask, seconds, TimeUnit.SECONDS);
-	}
-	
 	private List<CompletableFuture<String>> async() {
 		List<CompletableFuture<String>> list = new ArrayList<>(); 
 		IntStream.range(0, config.getNumberOfExecutions()).forEachOrdered(i -> {

@@ -11,7 +11,7 @@ common:
   type: async # async, mvc, webFlux
   number-of-executions: 1000
   fake-http-server-url: http://localhost:9090/imitateWork?timeInMs=%s
-  time-in-ms: 200
+  time-in-ms: 600
   thread-queue-capacity: 1000
   thread-max-pool-size: 1000
   thread-core-pool-size: 500
