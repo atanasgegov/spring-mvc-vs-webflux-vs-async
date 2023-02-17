@@ -24,10 +24,10 @@ public class AsyncService {
 	@Async
 	public CompletableFuture<String> doWork(int sequenceNumber) throws InterruptedException {
 
-		log.info("doWork {}", sequenceNumber);
 		String url = String.format(config.getFakeHttpServerUrl(), config.getTimeInMs());
 		String result = restTemplate.getForObject(url, String.class);
 
+		log.info("doWork {}", sequenceNumber);
 		return CompletableFuture.completedFuture(result);
 	}
 }
