@@ -43,24 +43,23 @@ public class Executor {
 		} else {
 			log.warn("Please, setup properly the configuration file - application.yml.");
 		}
-		
+
 		stopWatch.stop();
 		log.info("{}, time execution: {} ms.", config.getType(), stopWatch.getTotalTimeMillis());
 		log.info("Done.");
 	}
 
-	private List<CompletableFuture<String>> async() {
-		List<CompletableFuture<String>> list = new ArrayList<>(); 
-		IntStream.range(0, config.getNumberOfExecutions()).forEachOrdered(i -> {
+	private boolean async() {
+
+		for(int i=0;i<config.getNumberOfExecutions();i++) {
+			// Do the work in asynchronous way.
 			try {
-				// Do the work in asynchronous way.
-				list.add( asyncService.doWork(i) );
+				asyncService.doWork(i);
 			} catch (InterruptedException e) {
-				log.error("Something wrong happened.", e);
-				Thread.currentThread().interrupt();
+				return false;
 			}
-		});
+		}
 		
-		return list;
+		return true;
 	}
 }

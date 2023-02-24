@@ -34,7 +34,7 @@ public class Config {
 		executor.setQueueCapacity(threadQueueCapacity);
 		executor.setThreadNamePrefix("@AsyncThread-");
 		executor.initialize();
-		
+
 		return executor;
 	}
 	
