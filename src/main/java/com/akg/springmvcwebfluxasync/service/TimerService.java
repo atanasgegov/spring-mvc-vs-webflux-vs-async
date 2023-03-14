@@ -14,7 +14,7 @@ public class TimerService {
 	
 	@PostConstruct
 	private void init() {
-		log.info("Timer started.");
+		log.info("The Application's overall timer has been started.");
 		stopWatch = new StopWatch();
 		stopWatch.start();
 	}

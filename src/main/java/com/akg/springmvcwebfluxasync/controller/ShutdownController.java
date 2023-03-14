@@ -31,9 +31,9 @@ public class ShutdownController {
 	@RequestMapping("/shutdown")
 	public ResponseEntity<String> shutdown() {
 
-		int shutdownAfter = 1;
-		log.info("The application will shutdown in {} seconds.", shutdownAfter);
-		this.shutdown(shutdownAfter);
+		int shutdownAfterInSeconds = 1;
+		log.info("The application will shutdown in {} seconds.", shutdownAfterInSeconds);
+		this.shutdown(shutdownAfterInSeconds);
 		log.info("Application run for {} ms.", timerService.stopTimer().getTotalTimeMillis());
 
 		return new ResponseEntity<>(HttpStatus.OK);

@@ -1,10 +1,5 @@
 package com.akg.springmvcwebfluxasync.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.IntStream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -22,39 +17,43 @@ public class Executor {
 	@Autowired
 	private Config config;
 	
-	@Autowired
+	@Autowired(required=false)
 	private AsyncService asyncService;
 
+	@Autowired(required=false)
+	private WebFluxService webFluxService;
+	
 	@EventListener(ApplicationReadyEvent.class)
 	public void exec() {
-		log.info("Started.");
+
+		String type = config.getType();
+		log.info("The Executor's timer has been started for type='{}'", type);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		if (config.getType().equals(Config.ExecutionType.ASYNC.getValue())) {
+		if (type.equals(Config.ExecutionType.ASYNC.getValue())) {
 
-			async();
-		} else if (config.getType().equals(Config.ExecutionType.MVC.getValue())) {
+			doWork(asyncService);
+		} else if (type.equals(Config.ExecutionType.WEB_FLUX.getValue())) {
+
+			doWork(webFluxService);
+		} else if (type.equals(Config.ExecutionType.MVC.getValue())) {
 			
 			// MVC code is here
-		} else if (config.getType().equals(Config.ExecutionType.WEB_FLUX.getValue())) {
-			
-			// WEB_FLUX code is here
 		} else {
 			log.warn("Please, setup properly the configuration file - application.yml.");
 		}
 
 		stopWatch.stop();
-		log.info("{}, time execution: {} ms.", config.getType(), stopWatch.getTotalTimeMillis());
-		log.info("Done.");
+		log.info("The Executor's work completed for type='{}', time execution: {} ms.", type, stopWatch.getTotalTimeMillis());
 	}
 
-	private boolean async() {
+	private boolean doWork(BaseService<?> baseService) {
 
 		for(int i=0;i<config.getNumberOfExecutions();i++) {
 			// Do the work in asynchronous way.
 			try {
-				asyncService.doWork(i);
+				baseService.doWork(i);
 			} catch (InterruptedException e) {
 				return false;
 			}
